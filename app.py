@@ -12,13 +12,7 @@ def main():
     config = read_config('config.ini')
 
     user = args.user
-    token = False
-    
-    if args.token:
-        token = args.token
-    
-    if config and 'token' in config:
-        token = config['token']
+    token = get_token(args.token, config)
 
     repos_json = get_user_repos(user, token)
 
@@ -39,11 +33,8 @@ def main():
 def get_repo_stats(repo, token):
 
     repo_stats_url = 'https://api.github.com/repos/' + repo + '/stats/code_frequency'
-
     user = repo.split('/')[0]
-
-    data = request(repo_stats_url, user, token)
-
+    data = aqi_request(repo_stats_url, user, token)
     repo_stats_json = json.loads(data.decode("utf-8"))
 
     return repo_stats_json
@@ -52,23 +43,37 @@ def get_repo_stats(repo, token):
 def get_user_repos(user, token):
 
     user_url = 'https://api.github.com/users/' + user + '/repos'
-
-    data = request(user_url, user, token)
-
+    data = aqi_request(user_url, user, token)
     repos_json = json.loads(data.decode("utf-8"))
 
     return repos_json
 
 
-def request(url, user, token):
+def aqi_request(url, user, token):
 
     req = urllib.request.Request(url)
+
     if token:
         auth = base64.b64encode(bytes(user, encoding='utf-8') + b':' + bytes(token, encoding='utf-8'))
         req.add_header("Authorization", b'Basic ' + auth)
+
     response = urllib.request.urlopen(req)
     data = response.read()
+
     return data
+
+
+def get_token(args_token, config):
+
+    token = False
+
+    if args_token:
+        token = args_token
+
+    if config and 'token' in config:
+        token = config['token']
+
+    return token
 
 
 def read_config(config_file):
@@ -78,7 +83,6 @@ def read_config(config_file):
         return False
 
     config = configparser.ConfigParser()
-
     config.read(config_file)
 
     return config['default']
