@@ -4,7 +4,9 @@ import base64
 import argparse
 import configparser
 import urllib.request
+import locale
 
+locale.setlocale(locale.LC_ALL, '')
 
 def main():
 
@@ -27,7 +29,9 @@ def main():
         for period in code_freq:
             lines_total += int(period[1]) + int(period[2])
 
-    print(user + ' has written ' + str(lines_total) + ' lines of code over all repositories they own')
+    lines_total_pretty = locale.format("%d", lines_total, grouping=True)
+
+    print(user + ' has written ' + lines_total_pretty + ' lines of code over all repositories they own')
 
 
 def get_repo_stats(repo, token):
