@@ -6,6 +6,8 @@ This script works with anonymous requests, but you will be [rate limited quickly
 
 To increase your rate limit, [generate a personal access token](https://github.com/settings/tokens) and add into to `config.ini`.
 
+You can probably run this 2-3 times before you get rate limited for 3 hours without a token.
+
 #### Config (optional)
 
 You'll need a personal access token (see link above).
