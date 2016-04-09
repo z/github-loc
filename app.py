@@ -5,8 +5,10 @@ import argparse
 import configparser
 import urllib.request
 import locale
+import time
 
 locale.setlocale(locale.LC_ALL, '')
+
 
 def main():
 
@@ -24,14 +26,22 @@ def main():
             user_repos.append(repo['full_name'])
 
     lines_total = 0
+    periods = []
     for repo in user_repos:
         code_freq = get_repo_stats(repo, token)
         for period in code_freq:
+            periods.append(period[0])
             lines_total += int(period[1]) + int(period[2])
+
+    unique_periods = list(set(periods))
+    unique_periods.sort()
+
+    time_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[0]))
+    time_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[-1]))
 
     lines_total_pretty = locale.format("%d", lines_total, grouping=True)
 
-    print(user + ' has written ' + lines_total_pretty + ' lines of code over all repositories they own')
+    print(user + ' has written ' + lines_total_pretty + ' lines of code between all repositories they own from ' + time_start + ' to ' + time_end)
 
 
 def get_repo_stats(repo, token):
