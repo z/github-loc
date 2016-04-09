@@ -30,3 +30,10 @@ optional arguments:
   --token [TOKEN], -t [TOKEN]
                         github personal access token
 ```
+
+
+#### Example
+
+```
+python3 app.py --user z
+```
