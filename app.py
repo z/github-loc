@@ -1,14 +1,26 @@
-import urllib.request
+import os
 import json
+import base64
 import argparse
+import configparser
+import urllib.request
 
 
 def main():
+
     args = parse_args()
+    config = read_config('config.ini')
 
     user = args.user
+    token = False
+    
+    if args.token:
+        token = args.token
+    
+    if config and 'token' in config:
+        token = config['token']
 
-    repos_json = get_user_repos(user)
+    repos_json = get_user_repos(user, token)
 
     user_repos = []
     for repo in repos_json:
@@ -17,42 +29,67 @@ def main():
 
     lines_total = 0
     for repo in user_repos:
-        code_freq = get_repo_stats(repo)
+        code_freq = get_repo_stats(repo, token)
         for period in code_freq:
             lines_total += int(period[1]) + int(period[2])
 
     print(user + ' has written ' + str(lines_total) + ' lines of code over all repositories they own')
 
 
-def get_repo_stats(repo):
+def get_repo_stats(repo, token):
+
     repo_stats_url = 'https://api.github.com/repos/' + repo + '/stats/code_frequency'
 
-    req = urllib.request.Request(repo_stats_url)
-    response = urllib.request.urlopen(req)
-    data = response.read()
+    user = repo.split('/')[0]
+
+    data = request(repo_stats_url, user, token)
 
     repo_stats_json = json.loads(data.decode("utf-8"))
 
     return repo_stats_json
 
 
-def get_user_repos(user):
+def get_user_repos(user, token):
+
     user_url = 'https://api.github.com/users/' + user + '/repos'
 
-    req = urllib.request.Request(user_url)
-    response = urllib.request.urlopen(req)
-    data = response.read()
+    data = request(user_url, user, token)
 
     repos_json = json.loads(data.decode("utf-8"))
 
     return repos_json
 
 
+def request(url, user, token):
+
+    req = urllib.request.Request(url)
+    if token:
+        auth = base64.b64encode(bytes(user, encoding='utf-8') + b':' + bytes(token, encoding='utf-8'))
+        req.add_header("Authorization", b'Basic ' + auth)
+    response = urllib.request.urlopen(req)
+    data = response.read()
+    return data
+
+
+def read_config(config_file):
+
+    if not os.path.isfile(config_file):
+        print(config_file + ' not found, please create one.')
+        return False
+
+    config = configparser.ConfigParser()
+
+    config.read(config_file)
+
+    return config['default']
+
+
 def parse_args():
 
-    parser = argparse.ArgumentParser(description='Figure out how many lines of code have been added by a github user')
+    parser = argparse.ArgumentParser(description='Count how many lines of code have been commited by a github user')
 
     parser.add_argument('--user', '-u', nargs='?', type=str, help='github username', required=True)
+    parser.add_argument('--token', '-t', nargs='?', type=str, help='github personal access token (overrides the one in config.ini)')
 
     return parser.parse_args()
 
