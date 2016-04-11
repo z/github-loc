@@ -93,7 +93,7 @@ def get_token(args_token, config):
 def read_config(config_file):
 
     if not os.path.isfile(config_file):
-        print(config_file + ' not found, please create one.')
+        print('Warning:' + config_file + ' not found, processing request anonymously.')
         return False
 
     config = configparser.ConfigParser()
