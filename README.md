@@ -21,7 +21,7 @@ Replace `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` with your token.
 #### Usage
 
 ```
-usage: app.py [-h] --user [USER] [--token [TOKEN]]
+usage: github-loc.py [-h] --user [USER] [--token [TOKEN]]
 
 Count how many lines of code have been commited by a github user
 
@@ -37,5 +37,5 @@ optional arguments:
 #### Example
 
 ```
-python3 app.py --user z
+python3 github-loc.py --user z
 ```
