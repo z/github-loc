@@ -14,7 +14,7 @@ __all__ = [
 
 __title__ = 'Github Lines of Code'
 __package_name__ = 'githubloc'
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 __summary__ = 'A script to tell you how many lines have been committed by a user on github.'
 __keywords__ = ['github', 'lines of code', 'cli']
 __author__ = 'Tyler Mulligan'
