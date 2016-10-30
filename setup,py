@@ -1,0 +1,28 @@
+from setuptools import setup
+from setuptools import find_packages
+from githubloc import __author__, __email__, __url__, __version__
+
+with open('README.md') as f:
+    readme = f.read()
+
+with open('LICENSE') as f:
+    license = f.read()
+
+setup(
+    name='githubloc',
+    version=__version__,
+    description='Github Lines of Code',
+    long_description=readme,
+    author=__author__,
+    author_email=__email__,
+    url=__url__,
+    license=license,
+    packages=find_packages(exclude=('tests', 'docs')),
+    package_data={'': ['LICENSE', 'README.md', 'example.config.ini']},
+    include_package_data=True,
+    entry_points={
+       'console_scripts': [
+          'github-loc = githubloc.cli:main'
+       ]
+    },
+)

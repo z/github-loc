@@ -2,10 +2,12 @@ import os
 import json
 import base64
 import argparse
-import configparser
 import urllib.request
+import urllib.error
 import locale
 import time
+from .config import conf
+from .__about__ import __version__
 
 locale.setlocale(locale.LC_ALL, '')
 
@@ -13,12 +15,15 @@ locale.setlocale(locale.LC_ALL, '')
 def main():
 
     args = parse_args()
-    config = read_config('config.ini')
 
     user = args.user
-    token = get_token(args.token, config)
+    token = conf['token']
 
     repos_json = get_user_repos(user, token)
+
+    if len(repos_json) == 0:
+        print('Unable to find any repos, visit https://github.com/{} or try again'.format(user))
+        raise SystemExit
 
     user_repos = []
     for repo in repos_json:
@@ -70,44 +75,29 @@ def aqi_request(url, user, token):
     if token:
         auth = base64.b64encode(bytes(user, encoding='utf-8') + b':' + bytes(token, encoding='utf-8'))
         req.add_header("Authorization", b'Basic ' + auth)
-
-    response = urllib.request.urlopen(req)
-    data = response.read()
+    try:
+        response = urllib.request.urlopen(req)
+        data = response.read()
+    except urllib.error.HTTPError as err:
+        print("API Request Error: {0}".format(err))
+        print("Please add your token to ~/.githubloc.ini")
+        raise SystemExit
 
     return data
 
 
-def get_token(args_token, config):
-
-    token = False
-
-    if args_token:
-        token = args_token
-
-    if config and 'token' in config:
-        token = config['token']
-
-    return token
-
-
-def read_config(config_file):
-
-    if not os.path.isfile(config_file):
-        print('Warning:' + config_file + ' not found, processing request anonymously.')
-        return False
-
-    config = configparser.ConfigParser()
-    config.read(config_file)
-
-    return config['default']
-
-
 def parse_args():
 
-    parser = argparse.ArgumentParser(description='Count how many lines of code have been commited by a github user')
+    parser = argparse.ArgumentParser(
+            description='Count how many lines of code have been commited by a github user')
 
-    parser.add_argument('--user', '-u', nargs='?', type=str, help='github username', required=True)
-    parser.add_argument('--token', '-t', nargs='?', type=str, help='github personal access token (overrides the one in config.ini)')
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {version}'.format(version=__version__))
+
+    parser.add_argument('--user', '-u', nargs='?', type=str,
+                        help='github username', required=True)
+    parser.add_argument('--token', '-t', nargs='?', type=str,
+                        help='github personal access token (overrides the one in config.ini)')
 
     return parser.parse_args()
 

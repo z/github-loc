@@ -13,7 +13,8 @@ You can probably run this 2-3 times before you get rate limited for 3 hours with
 You'll need a personal access token (see link above).
 
 ```
-cp example.config.ini config.ini
+python3 setup.py install
+vim ~/.githubloc.ini
 ```
 
 Replace `xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` with your token.

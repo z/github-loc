@@ -1,4 +1,9 @@
 .idea
 *.swp
 *.swo
-config.ini
+*.pyc
+/githubloc.egg-info/
+/venv/
+activate
+/build/
+/dist/
