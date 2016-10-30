@@ -8,3 +8,4 @@ activate
 /build/
 /dist/
 /.tox/
+/.eggs/
