@@ -7,3 +7,4 @@
 activate
 /build/
 /dist/
+/.tox/
