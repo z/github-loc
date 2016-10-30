@@ -6,6 +6,7 @@ python:
   - pypy3
 install:
   - python setup.py install
+  - pip install -r dev-requirements.in
 script:
   - py.test
   - flake8 --ignore=E221,E501,F401,E126 githubloc/*.py
