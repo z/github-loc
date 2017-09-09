@@ -2,8 +2,8 @@ import argparse
 import locale
 import time
 from githubloc import api
-from .config import conf
-from .__about__ import __version__
+from githubloc.config import conf
+from githubloc.__about__ import __version__
 
 locale.setlocale(locale.LC_ALL, '')
 
@@ -39,12 +39,15 @@ def main():
     unique_periods = list(set(periods))
     unique_periods.sort()
 
-    time_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[0]))
-    time_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[-1]))
+    if len(unique_periods) > 1:
+        time_start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[0]))
+        time_end = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(unique_periods[-1]))
 
-    lines_total_pretty = locale.format("%d", lines_total, grouping=True)
+        lines_total_pretty = locale.format("%d", lines_total, grouping=True)
 
-    print(user + ' has written ' + lines_total_pretty + ' lines of code between all repositories they own from ' + time_start + ' to ' + time_end)
+        print('{} has written {} lines of code between all repositories they own from {} to {}'.format(user, lines_total_pretty, time_start, time_end))
+    else:
+        print('hmmm, I had trouble getting the data, try one more time')
 
 
 def parse_args():

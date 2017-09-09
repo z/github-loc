@@ -9,3 +9,4 @@ activate
 /dist/
 /.tox/
 /.eggs/
+/.cache/

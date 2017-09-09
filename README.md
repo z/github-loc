@@ -49,6 +49,6 @@ Unit tests can be run with `python setup,py test` and coverage tests with `tox`.
 
 ## License
 
-Copyright (c) 2016 Tyler Mulligan (z@xnz.me) and contributors.
+Copyright (c) 2017 Tyler Mulligan (z@xnz.me) and contributors.
 
 Distributed under the MIT license. See the LICENSE file for more details.
