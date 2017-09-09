@@ -1,5 +1,7 @@
 # github-loc
 
+[![Build Status](https://travis-ci.org/z/github-loc.svg?branch=master)](https://travis-ci.org/z/github-loc)
+
 A script to tell you how many lines have been committed by a user on github.
 
 This script works with anonymous requests, but you will be [rate limited quickly](https://api.github.com/rate_limit). 
